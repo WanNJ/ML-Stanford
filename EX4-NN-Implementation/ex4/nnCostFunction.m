@@ -20,15 +20,13 @@ Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
                  hidden_layer_size, (input_layer_size + 1));
 
 Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
-                 num_labels, (hidden_layer_size + 1));
-
+                 num_labels, (hidden_layer_size + 1));             
+             
 % Setup some useful variables
 m = size(X, 1);
 
 % You need to return the following variables correctly 
 X = [ones(m, 1), X];
-Theta1_grad = zeros(size(Theta1));
-Theta2_grad = zeros(size(Theta2));
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
@@ -46,8 +44,13 @@ for i = 1:m
 end
 y = mask_y;
 
-a2 = sigmoid(X * Theta1');
-a3 = sigmoid([ones(m, 1), a2] * Theta2');
+% Forward Propagation
+z2 = [ones(m, 1), X * Theta1'];
+a2 = [ones(m, 1), sigmoid(z2(:, 2:end))];
+z3 = [ones(m, 1), a2(:, 2:end)] * Theta2';
+a3 = sigmoid(z3);
+
+% Unregularized Cost Function
 cost = -y .* (log(a3)) - (1 - y) .* log(1 - a3);
 J = sum(sum(cost))/m;
 
@@ -69,7 +72,20 @@ J = J + lambda/(2 * m) * reg;
 %         Hint: We recommend implementing backpropagation using a for-loop
 %               over the training examples if you are implementing it for the 
 %               first time.
-%
+
+delta3 = a3 - y;                                            % 5000 * output_layer
+delta2 = delta3 * Theta2 .* sigmoidGradient(z2);            % 5000 * (hidden_layer + 1)
+delta2 = delta2(:, 2:end);
+
+Delta1 = 0;
+Delta2 = 0;
+
+for i = 1:m
+    Delta1 = Delta1 + delta2(i, :)' * X(i, :);
+    Delta2 = Delta2 + delta3(i, :)' * a2(i, :);
+end
+
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -78,22 +94,8 @@ J = J + lambda/(2 * m) * reg;
 %               and Theta2_grad from Part 2.
 %
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Theta1_grad = Delta1/m;
+Theta2_grad = Delta2/m;
 
 
 % -------------------------------------------------------------

@@ -5,10 +5,9 @@ function p = predict(Theta1, Theta2, X)
 
 % Useful values
 m = size(X, 1);
-num_labels = size(Theta2, 1);
 
-% You need to return the following variables correctly 
-p = zeros(size(X, 1), 1);
+X = [ones(m, 1), X];
+
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Complete the following code to make predictions using
@@ -21,12 +20,10 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
+a2 = sigmoid(X * Theta1');
+a3 = sigmoid([ones(m, 1), a2] * Theta2');
 
-
-
-
-
-
+[~, p] = max(a3, [], 2);
 
 
 % =========================================================================

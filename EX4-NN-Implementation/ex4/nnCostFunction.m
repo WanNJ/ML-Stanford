@@ -97,6 +97,14 @@ end
 Theta1_grad = Delta1/m;
 Theta2_grad = Delta2/m;
 
+mask_Theta1 = Theta1;
+mask_Theta1(:, 1) = 0;
+
+mask_Theta2 = Theta2;
+mask_Theta2(:, 1) = 0;
+
+Theta1_grad = Theta1_grad + lambda/m .* mask_Theta1;
+Theta2_grad = Theta2_grad + lambda/m .* mask_Theta2;
 
 % -------------------------------------------------------------
 

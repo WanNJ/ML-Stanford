@@ -51,6 +51,10 @@ a3 = sigmoid([ones(m, 1), a2] * Theta2');
 cost = -y .* (log(a3)) - (1 - y) .* log(1 - a3);
 J = sum(sum(cost))/m;
 
+% Regularization of cost function
+reg = sum(sum(Theta1(:, 2:end) .^ 2)) + sum(sum(Theta2(:, 2:end) .^ 2));
+J = J + lambda/(2 * m) * reg;
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and

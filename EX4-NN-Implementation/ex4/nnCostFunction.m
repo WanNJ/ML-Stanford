@@ -1,4 +1,4 @@
-function [J grad] = nnCostFunction(nn_params, ...
+function [J, grad] = nnCostFunction(nn_params, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
                                    num_labels, ...
@@ -24,9 +24,9 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 % Setup some useful variables
 m = size(X, 1);
-         
+
 % You need to return the following variables correctly 
-J = 0;
+X = [ones(m, 1), X];
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
 
@@ -38,7 +38,19 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
-%
+
+% Vectorize label y
+mask_y = zeros(m, num_labels);
+for i = 1:m
+    mask_y(i, y(i, 1)) = 1;
+end
+y = mask_y;
+
+a2 = sigmoid(X * Theta1');
+a3 = sigmoid([ones(m, 1), a2] * Theta2');
+cost = -y .* (log(a3)) - (1 - y) .* log(1 - a3);
+J = sum(sum(cost))/m;
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and

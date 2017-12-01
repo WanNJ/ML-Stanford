@@ -7,9 +7,9 @@ function [C, sigma] = dataset3Params(X, y, Xval, yval)
 %   sigma based on a cross-validation set.
 %
 
-% You need to return the following variables correctly.
-C = 1;
-sigma = 0.3;
+% You need to return the following variables correctly - C, sigma
+
+waitlist = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Fill in this function to return the optimal C and sigma
@@ -22,12 +22,24 @@ sigma = 0.3;
 %  Note: You can compute the prediction error using 
 %        mean(double(predictions ~= yval))
 %
+l = size(waitlist, 2);
 
+result = zeros(l, l);
+for i = 1:l
+    for j = 1:l
+        model= svmTrain(X, y, waitlist(i), @(x1, x2) gaussianKernel(x1, x2, waitlist(j)));
+        predictions = svmPredict(model, Xval);
+        result(i, j) = mean(double(predictions ~= yval));
+    end
+end
 
+[~, index] = min(result(:));
 
+C = waitlist(mod(index, l));
+sigma = waitlist(fix(index/l) + 1);
 
-
-
+disp(index);
+disp(result);
 
 % =========================================================================
 

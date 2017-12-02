@@ -20,10 +20,11 @@ S = zeros(n);
 %       number of examples).
 %
 
+Sigma = (X' * X) ./ m;
 
-
-
-
+% U contains the principal components
+% S contains a diagnol matrix
+[U, S, ~] = svd(Sigma);
 
 
 % =========================================================================

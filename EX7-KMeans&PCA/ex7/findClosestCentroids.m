@@ -19,7 +19,16 @@ idx = zeros(size(X,1), 1);
 %               range 1..K
 %
 % Note: You can use a for-loop over the examples to compute this.
-
+for i = 1:size(X, 1)
+    min = realmax;
+    for j = 1:K
+        dist = sum((X(i, :) - centroids(j, :)) .^ 2);
+        if dist <= min
+            idx(i) = j;
+            min = dist;
+        end
+    end
+end
 
 
 

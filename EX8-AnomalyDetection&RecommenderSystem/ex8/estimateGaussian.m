@@ -8,11 +8,7 @@ function [mu sigma2] = estimateGaussian(X)
 % 
 
 % Useful variables
-[m, n] = size(X);
-
-% You should return these values correctly
-mu = zeros(n, 1);
-sigma2 = zeros(n, 1);
+[m, ~] = size(X);
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Compute the mean of the data and the variances
@@ -22,12 +18,9 @@ sigma2 = zeros(n, 1);
 %
 
 
+mu = sum(X)'/m;
 
-
-
-
-
-
+sigma2 = sum((X' - mu) .^ 2, 2)/m;
 
 
 % =============================================================
